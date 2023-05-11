@@ -5,15 +5,19 @@ using UnityEngine;
 public class Snake : MonoBehaviour
 {
 
-    private Vector2 _direction = Vector2.right;  //Yön adýnda bir deðiþken atadýk. Varsayýlan yönü sað olarak atadýk.
+    private Vector2 _direction = Vector2.right;  //Yon adinda bir degisken atadik. Varsayilan yonu sag olarak atadik.
+    private List<Transform> _segments;   // Segments adinda nesnenin transformunu tutan bir degisken olusturduk.
+    public Transform segmentPrefab;      // Referans alabileceði bir Transform türünde deðiþken oluþtuduk.
+
     void Start()
     {
-        
+        _segments = new List<Transform>();  //segments adinda yeni bir liste olusturduk.
+        _segments.Add(this.transform);      //Bu nesnenin transformunu segments listesine ekledik.
     }
 
     void Update()
     {
-        // klavyeden alýnan girdiye göre yönümüzü yeniden atadýk.
+        // klavyeden alinan girdiye gore yönümüzü yeniden atadýk.
 
         if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))     
         {
@@ -35,6 +39,12 @@ public class Snake : MonoBehaviour
     //Her bilgisayarda kare hýzýný eþit tutmak için fixed içerisine hareket kodunuzu yazýyoruz.
     private void FixedUpdate()
     {
+        //Burada segment dizisindeki her bir nesnenin konumunu bir önündekinin konumuna eþitledik
+        for (int i = _segments.Count - 1; i > 0; i--)   
+        {
+            _segments[i].position = _segments[i - 1].position;  
+        }
+
         //her bir eksendeki pozisyonu yönümüzle toplayarak hareket saðladýk.
         //yýlan her zaman tam sayýlar üzerindeki konumlarda hareket etsin diye Mathf.round kullandýk.
         this.transform.position = new Vector3(
@@ -43,4 +53,24 @@ public class Snake : MonoBehaviour
             0.0f
         );
     }
+
+    //Buyume fonksiyonu buraya yazilacak
+    private void Grow()
+    {
+        // Segment adinda bir bir degisken olusturduk ve bu degiskene yeni bir prefab olusturduk
+        Transform segment = Instantiate(this.segmentPrefab);
+        segment.position = _segments[_segments.Count - 1].position;  // pozisyonunu segments dizisindeki son elemanin konumuna esitledik
+
+        _segments.Add(segment);  //Segments dizisine segment objesini de ekledik
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.tag == "Food")
+        {
+            Grow();
+        }
+    }
+
+
 }
