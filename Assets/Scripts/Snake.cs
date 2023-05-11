@@ -6,13 +6,15 @@ public class Snake : MonoBehaviour
 {
 
     private Vector2 _direction = Vector2.right;  //Yon adinda bir degisken atadik. Varsayilan yonu sag olarak atadik.
-    private List<Transform> _segments;   // Segments adinda nesnenin transformunu tutan bir degisken olusturduk.
+    private List<Transform> _segments = new List<Transform>();   // Segments adinda nesnenin transformunu tutan bir degisken olusturduk.
     public Transform segmentPrefab;      // Referans alabileceği bir Transform türünde değişken oluştuduk.
+    public int initialSize = 4;    // yilanin boyu ayarlabilir oldu
 
     void Start()
     {
-        _segments = new List<Transform>();  //segments adinda yeni bir liste olusturduk.
-        _segments.Add(this.transform);      //Bu nesnenin transformunu segments listesine ekledik.
+        ResetState();
+       // _segments = new List<Transform>();  //segments adinda yeni bir liste olusturduk.
+       // _segments.Add(this.transform);      //Bu nesnenin transformunu segments listesine ekledik.
     }
 
     void Update()
@@ -64,11 +66,34 @@ public class Snake : MonoBehaviour
         _segments.Add(segment);  //Segments dizisine segment objesini de ekledik
     }
 
+    // Her seyi sifirlamayi yapiyoruz
+    private void ResetState()
+    {
+        for (int i = 1; i < _segments.Count; i++)
+        {
+            Destroy(_segments[i].gameObject); // burada segments dizisinin 1. elemani ve sonrasindeki tüm elemanlari yok ettik. 0 da player oldugundan ona dokunmadik.
+        }
+
+        _segments.Clear();  // diziyi temizledik
+        _segments.Add(this.transform); // diziye playeri ekledik
+
+        for (int i = 1; i < initialSize; i++)  // belirledigimiz uzunluga erisene kadar dongu calisir
+        {
+            _segments.Add(Instantiate(this.segmentPrefab));  //segmentprefab objesi diziye eklenir 
+        }
+
+        this.transform.position = Vector3.zero;    //Pozisyonu sifirladik
+
+    }
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.tag == "Food")
         {
-            Grow();
+            Grow();  // temas ettigin nesne food ise büyü
+        }
+        else if (other.tag == "Obstacle")
+        {
+            ResetState();  // temas ettigin nesnenin tagi sinirlar ise sifirla
         }
     }
 
