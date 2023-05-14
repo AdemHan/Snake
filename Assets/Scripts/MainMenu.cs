@@ -4,12 +4,13 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Audio;
 using UnityEngine.UI;
+using TMPro;
 
 public class MainMenu : MonoBehaviour
 {
     public AudioMixer audioMixer;  //ses dosyasý referansý için gerekli
 
-    public Dropdown resolutionDropdown;  // referans vermemiz için gerekli bir deðiþken
+    public TMP_Dropdown resolutionDropdown;  // referans vermemiz için gerekli bir deðiþken
 
     Resolution[] resolutions;  //resolution yani ölçeklendirme verilerini tutan bir dizi
 

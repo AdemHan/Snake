@@ -79,7 +79,7 @@ public class Snake : MonoBehaviour
 
         for (int i = 1; i < initialSize; i++)  // belirledigimiz uzunluga erisene kadar dongu calisir
         {
-            _segments.Add(Instantiate(this.segmentPrefab));  //segmentprefab objesi diziye eklenir 
+            _segments.Add(Instantiate(this.segmentPrefab));  //segmentprefab objesi listeye eklenir 
         }
 
         this.transform.position = Vector3.zero;    //Pozisyonu sifirladik
