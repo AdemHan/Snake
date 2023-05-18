@@ -22,13 +22,22 @@ public class MainMenu : MonoBehaviour
 
         List<string> options = new List<string>();  //seceneklerimizi listeye ekleyip her boyut için yazi ekleyeceðiz. sonra onlarý resolutionDropdowna aktaricaz. O yüzden bir list olusturduk.
 
+        int currentResolutionIndex = 0;  //varsayýlan ayarlari tutmasi icin bir degisken atadik 
+
         for (int i = 0; i < resolutions.Length; i++)  //dizinin boyutunda bir dizi olusturduk
         {
             string option = resolutions[i].width + " x " + resolutions[i].height;  // i indexli eleman için en boy verilerini alýp seçenek adýndaki degiskene atadik.
             options.Add(option);   // seçenekler listesine, seçenek adýndaki degiskeni atadik
+
+            if (resolutions[i].width == Screen.currentResolution.width && resolutions[i].height == Screen.currentResolution.height)   //eleman indexindeki boyutlar bizim mevcut verimizdekileri dogruluyorsa mevcut olan o seciliyor numaralarinin
+            {
+                currentResolutionIndex = i;
+            }
         }
 
         resolutionDropdown.AddOptions(options);     // resolutionDropdown degiskenine options listesini ekledik
+        resolutionDropdown.value = currentResolutionIndex;     //esitleme islemleri yapildi
+        resolutionDropdown.RefreshShownValue();
     }
 
     public void PlayGame()
@@ -43,6 +52,11 @@ public class MainMenu : MonoBehaviour
         Application.Quit();
     }
 
+    public void SetResolution (int resolutionIndex)  //varsayilan olarak tam ekran tusunu secme
+    {
+        Resolution resolution = resolutions[resolutionIndex];
+        Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
+    }
     public void SetVolume(float volume)    //Ses seviyesini audioMixer aracýlýðýyla slidera baðlamýþtýk. Deðerin atamasýný burada yaptýk.
     {
         audioMixer.SetFloat("volume", volume);
